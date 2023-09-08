@@ -18,7 +18,30 @@ export const ItemCard: React.FC<ItemProps> = ({ item }) => {
   const handleAddToCart = () => {
     // Functionality to add item to cart
     if (item.quantity > 0) {
-      setCart([...cart, item]);
+      // Check if cart already has the item
+      if (cart.find((cartItem) => cartItem.id === item.id)) {
+        const index = cart.findIndex((cartItem) => cartItem.id === item.id);
+        const newCart = Array.from(cart);
+        console.log(newCart[index]);
+        const i = newCart[index];
+        const quantity = i.quantity;
+        setCart(
+          newCart
+            .slice(0, index)
+            .concat({ ...i, quantity: quantity + 1 })
+            .concat(newCart.slice(index + 1))
+        );
+      } else {
+        setCart([
+          ...cart,
+          {
+            ...item,
+            quantity: 1,
+          },
+        ]);
+      }
+      // If yes, then increase the quantity
+      // If no, then add the item to cart
       const newItems = items.map((i) => {
         if (i.id === item.id) {
           return {
